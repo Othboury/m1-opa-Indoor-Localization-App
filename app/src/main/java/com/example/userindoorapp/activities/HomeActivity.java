@@ -24,6 +24,12 @@ import com.example.userindoorapp.WifiReceiver;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ * Home Activity
+ * @author Othmane
+ *
+ * **/
+
 public class HomeActivity extends AppCompatActivity {
 
     private ListView wifiList;
@@ -39,16 +45,28 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         btnLocate= findViewById(R.id.btnHttp);
         btnScan = findViewById(R.id.btnScanUser);
+
+        /* Get the user's logged in Token passed from the Login activity*/
         Intent intent = getIntent();
         String Token = intent.getStringExtra("Token");
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         if (!wifiManager.isWifiEnabled()) {
-            Toast.makeText(getApplicationContext(), "Turning WiFi ON...", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Turning WiFi ON...", Toast.LENGTH_LONG)
+                    .show();
             wifiManager.setWifiEnabled(true);
         }
 
+        /**
+         *
+         * Locate button Listener, allows to Locate the user by collecting the Wifi Network data
+         * and sending POST it to the prediction model's server "httpReq()" before sending the
+         * result in an intent into the prediction activity
+         *
+         * @author Othmane
+         *
+         * **/
         btnLocate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,16 +80,26 @@ public class HomeActivity extends AppCompatActivity {
                 }
 
                 if(salle != null){
-                    Intent myIntent = new Intent(HomeActivity.this, PredictionActivity.class);
+                    Intent myIntent =
+                            new Intent(HomeActivity.this, PredictionActivity.class);
                     myIntent.putExtra("salle", salle); //Optional parameters
                     HomeActivity.this.startActivity(myIntent);
                 }else{
-                    Intent myIntent = new Intent(HomeActivity.this, PredictionActivity.class);
+                    Intent myIntent =
+                            new Intent(HomeActivity.this, PredictionActivity.class);
                     myIntent.putExtra("salle", "No Data"); //Optional parameters
                     HomeActivity.this.startActivity(myIntent);                }
             }
         });
 
+        /**
+         *
+         * Scan button Listener, allows to redirect the user to the scan activity in order to scan
+         * new Wifi Networks and save them into the DB via Api
+         *
+         * @author Othmane
+         *
+         * **/
         btnScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -81,6 +109,15 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     *
+     * httpReq() function: it launches the POST Task by calling an instance from HTTPReqTaskP
+     * and executing it
+     *
+     * returns String
+     * @author Othmane
+     *
+     * **/
     public String httpReq() throws ExecutionException, InterruptedException {
         launchScan();
         System.out.println("WIFI");
@@ -91,14 +128,27 @@ public class HomeActivity extends AppCompatActivity {
         return lineSalle;
     }
 
+    /**
+     *
+     * LaunchScan() function : it launches a WIFI Network scan in order to locate the user
+     *
+     * returns void
+     * @author Othmane
+     *
+     * **/
     public void launchScan(){
-                if (ActivityCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(HomeActivity.this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
-                            HomeActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
+                            HomeActivity.this, new String[]{
+                                    Manifest.permission.ACCESS_COARSE_LOCATION},
+                            MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
                 } else {
                     wifiManager.startScan();
                     if(receiverWifi.ShowString() == null){
-                        Toast.makeText(HomeActivity.this, "EMPTY", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(HomeActivity.this, "EMPTY", Toast.LENGTH_SHORT)
+                                .show();
                     }
                 }
     }
@@ -118,12 +168,21 @@ public class HomeActivity extends AppCompatActivity {
     private void getWifi() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            Toast.makeText(HomeActivity.this, "version> = marshmallow", Toast.LENGTH_SHORT).show();
-            if (ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(HomeActivity.this, "location turned off", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(HomeActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
+            Toast.makeText(HomeActivity.this, "version> = marshmallow",
+                    Toast.LENGTH_SHORT).show();
+            if (ContextCompat.checkSelfPermission(HomeActivity.this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(HomeActivity.this, "location turned off",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                ActivityCompat.requestPermissions(HomeActivity.this,
+                        new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
             } else {
-                Toast.makeText(HomeActivity.this, "location turned on", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "location turned on",
+                        Toast.LENGTH_SHORT)
+                        .show();
                 wifiManager.startScan();
             }
         } else {
@@ -138,15 +197,21 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_ACCESS_COARSE_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(HomeActivity.this, "permission granted", Toast.LENGTH_SHORT).show();
+                if (grantResults.length > 0 && grantResults[0] ==
+                        PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(HomeActivity.this, "permission granted",
+                            Toast.LENGTH_SHORT)
+                            .show();
                     launchScan();
                 } else {
-                    Toast.makeText(HomeActivity.this, "permission not granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(HomeActivity.this, "permission not granted",
+                            Toast.LENGTH_SHORT)
+                            .show();
                     return;
                 }
                 break;

@@ -7,11 +7,13 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -21,124 +23,168 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.userindoorapp.R;
+import com.example.userindoorapp.ScanTaskP;
 import com.example.userindoorapp.WifiReceiver;
+import com.example.userindoorapp.model.Wifi;
+import com.google.gson.JsonObject;
+
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
 public class ScanActivity extends AppCompatActivity {
     EditText textRoom;
     Button buttonScan;
+    EditText textLink;
+    EditText textPort;
     private WifiManager wifiManager;
     private ListView wifiList;
     private final int MY_PERMISSIONS_ACCESS_COARSE_LOCATION = 1;
     WifiReceiver receiverWifi;
+    String roomNumber;
+    String link;
+    String port;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scn);
         textRoom = findViewById(R.id.roomText);
-        buttonScan = findViewById(R.id.scanBtn);
-        buttonScan.setEnabled(false);
+        buttonScan = findViewById(R.id.scanNewBtn);
+        textLink = findViewById(R.id.linkText);
+        textPort = findViewById(R.id.txtPort);
+        textLink.setEnabled(false);
+        textPort.setEnabled(false);
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
         if (!wifiManager.isWifiEnabled()) {
-            Toast.makeText(getApplicationContext(), "Turning WiFi ON...", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Turning WiFi ON...",
+                    Toast.LENGTH_LONG).show();
             wifiManager.setWifiEnabled(true);
         }
 
         textRoom.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable arg0) {
-                String roomNumber = textRoom.getText().toString();
-                enableBtnStartScan();
-                launchScan();
-                Toast.makeText(getApplicationContext(), "Salle: " + roomNumber, Toast.LENGTH_LONG).show();
+                roomNumber = textRoom.getText().toString();
+                enableTxtLink();
             }
 
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
+        });
+
+        textLink.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                link = textLink.getText().toString();
+                enablePort();
+
             }
         });
 
+        textPort.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                port = textPort.getText().toString();
+                enableBtnStartScan();
+                launchScan();
+            }
+        });
     }
 
+    public void enableTxtLink(){
+        textLink.setEnabled(true);
+    }
+    public void enablePort(){
+        textPort.setEnabled(true);
+    }
     public void enableBtnStartScan(){
         buttonScan.setEnabled(true);
+    }
+
+    public boolean scanReq() throws ExecutionException, InterruptedException {
+        String roomNumber = textRoom.getText().toString();
+        launchScan();
+        JsonObject roomJson = new JsonObject();
+        boolean done = false;
+        List<Wifi> listWifi = receiverWifi.newScanList();
+        if(!roomNumber.equals("") && !link.equals("") && !port.equals("")) {
+            while (!done) {
+                for (Wifi wifi : listWifi) {
+                    wifi.setIdsalle(roomNumber);
+                    roomJson.addProperty("bssid", wifi.getBssid());
+                    roomJson.addProperty("centrefrequence0", wifi.getCenterFreq0());
+                    roomJson.addProperty("frequency", wifi.getFrequency());
+                    roomJson.addProperty("level", wifi.getLevel());
+                    roomJson.addProperty("ssid", wifi.getSsid());
+                    roomJson.addProperty("date", wifi.getDate());
+                    roomJson.addProperty("salle", wifi.getIdsalle());
+
+                    ScanTaskP ScanTaskP = new ScanTaskP();
+                    if (ScanTaskP.execute(roomJson, link, port).get()) {
+                        ScanTaskP.cancel(true);
+                    }
+                }
+                done = true;
+            }
+        }else{
+            Toast.makeText(ScanActivity.this, "Remplissez tous les champs!",
+                    Toast.LENGTH_SHORT).show();
+        }
+        if(done){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public void launchScan(){
         buttonScan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(ScanActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(ScanActivity.this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(
-                            ScanActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
+                            ScanActivity.this, new String[]{Manifest.permission
+                                    .ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
                 } else {
-                    String roomNumber = textRoom.getText().toString();
-                    //String floorNumber = textFloor.getText().toString();
-                    //String buildingNumber = textBuilding.getText().toString();
                     wifiManager.startScan();
 
                     if(receiverWifi.ShowString() == null){
-                        Toast.makeText(ScanActivity.this, "EMPTY", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ScanActivity.this, "No Wifi data found.",
+                                Toast.LENGTH_SHORT).show();
                     }else{
-                        String sb =  receiverWifi.ShowString();
-                        StringBuilder header = new StringBuilder();
-                        header.append("batimentid").append(",").append("salleid").append(",").append("floorid").append(",")
-                                .append("positionid").append(",").append("ssid").append(",")
-                                .append("bssid").append(",").append("level").append(",").append("centrefrequence0")
-                                .append(",").append("frequency");
-
-                        /*String fullRoomNumber = "";
-                        if(roomNumber.length() == 1){
-                            fullRoomNumber = "00"+ roomNumber;
-                        }else if(roomNumber.length() ==2){
-                            fullRoomNumber = "0" + roomNumber;
-                        }else{
-                            fullRoomNumber = roomNumber;
-                        }*/
-
-                       /* filename = "salle-" + buildingNumber + fullRoomNumber + ".txt";
-                        String dataToReplace = "N/A";
-                        Pattern pattern = Pattern.compile(dataToReplace);
-                        Matcher matcher = pattern.matcher(sb);
-                        String result = matcher.replaceAll(roomNumber);
-
-                        String ToReplace = "Empty";
-                        Pattern patternFloor = Pattern.compile(ToReplace);
-                        Matcher matcherFloor = patternFloor.matcher(result);
-                        String resultFloor = matcherFloor.replaceAll(floorNumber);
-
-                        String buildingToReplace = "NoBat";
-                        Pattern patternBuilding = Pattern.compile(buildingToReplace);
-                        Matcher matcherBuilding = patternBuilding.matcher(resultFloor);
-                        resultBuilding = matcherBuilding.replaceAll(buildingNumber);*/
-                        /*if(fileExists(MainActivity.this, filename)){
-                            try {
-                                FileOutputStream fOut = openFileOutput(filename,  MODE_APPEND);
-                                OutputStreamWriter osw = new OutputStreamWriter(fOut);
-                                osw.write(resultBuilding);
-                                osw.flush();
-                                osw.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
+                        try {
+                            if(scanReq()) {
+                                Toast.makeText(ScanActivity.this,
+                                        "Wifi data collected and stored...",
+                                        Toast.LENGTH_SHORT).show();
                             }
-                        }else {
-                            try {
-                                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(getApplicationContext().openFileOutput(filename, Context.MODE_PRIVATE));
-                                outputStreamWriter.write(header+resultBuilding);
-                                outputStreamWriter.close();
-                            } catch (IOException e) {
-                                Log.e("Exception", "File write failed: " + e.toString());
-                            }
-                        }*/
+                        } catch (ExecutionException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    Toast.makeText(ScanActivity.this, "Wifi Data Collected and Stored...", Toast.LENGTH_SHORT).show();
-                    //Toast.makeText(MainActivity.this, "File name:" + filename, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -157,12 +203,12 @@ public class ScanActivity extends AppCompatActivity {
     private void getWifi() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-            Toast.makeText(ScanActivity.this, "version> = marshmallow", Toast.LENGTH_SHORT).show();
-            if (ContextCompat.checkSelfPermission(ScanActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(ScanActivity.this, "location turned off", Toast.LENGTH_SHORT).show();
-                ActivityCompat.requestPermissions(ScanActivity.this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
+            if (ContextCompat.checkSelfPermission(ScanActivity.this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(ScanActivity.this, new String[]{
+                        Manifest.permission.ACCESS_COARSE_LOCATION},
+                        MY_PERMISSIONS_ACCESS_COARSE_LOCATION);
             } else {
-                Toast.makeText(ScanActivity.this, "location turned on", Toast.LENGTH_SHORT).show();
                 wifiManager.startScan();
             }
         } else {
@@ -177,15 +223,18 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_ACCESS_COARSE_LOCATION:
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Toast.makeText(ScanActivity.this, "permission granted", Toast.LENGTH_SHORT).show();
-                    launchScan();
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    Toast.makeText(ScanActivity.this, "permission granted",
+                            Toast.LENGTH_SHORT).show();
+                    //launchScan();
                 } else {
-                    Toast.makeText(ScanActivity.this, "permission not granted", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScanActivity.this, "permission not granted",
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
                 break;

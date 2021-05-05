@@ -3,10 +3,12 @@ package com.example.userindoorapp.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.userindoorapp.R;
@@ -14,10 +16,17 @@ import com.example.userindoorapp.UserLoginTask;
 
 import java.util.concurrent.ExecutionException;
 
+/**
+ *
+ * Login Activity, the Launcher activity of the application. It allows to the user to Log into
+ * the application through REST Api Basic Authentication
+ *
+ */
 public class LoginActivity extends AppCompatActivity {
 
     EditText edtUsername;
     EditText edtPassword;
+    TextView txtRegister;
     Button btnLogin;
 
     @Override
@@ -28,6 +37,7 @@ public class LoginActivity extends AppCompatActivity {
         edtUsername = (EditText) findViewById(R.id.edtUsername);
         edtPassword = (EditText) findViewById(R.id.edtPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        txtRegister = findViewById(R.id.txtRegister);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -41,6 +51,15 @@ public class LoginActivity extends AppCompatActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+            }
+        });
+
+        txtRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://10.21.22.150:8100/sign-up"));
+                startActivity(browserIntent);
             }
         });
 
@@ -73,7 +92,8 @@ public class LoginActivity extends AppCompatActivity {
             if (Token != null) {
                 return Token;
             } else {
-                Toast.makeText(this, "Utilisateur inexistant!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Utilisateur inexistant!", Toast.LENGTH_SHORT)
+                        .show();
                 return null;
             }
         }
