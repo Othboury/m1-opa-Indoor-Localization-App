@@ -5,12 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.widget.ListView;
 
+import com.example.userindoorapp.activities.ScanActivity;
+import com.example.userindoorapp.model.Wifi;
 import com.google.gson.JsonObject;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
+import androidx.annotation.RequiresApi;
 
 public class WifiReceiver extends BroadcastReceiver {
     WifiManager wifiManager;
@@ -22,27 +31,48 @@ public class WifiReceiver extends BroadcastReceiver {
     String floorId= "Empty";
     int positionId = 0;
     JsonObject combined= new JsonObject();
+    List<Wifi> listWifi = new ArrayList<>();
+    final String uuid = UUID.randomUUID().toString();
 
     public WifiReceiver(WifiManager wifiManager, ListView wifiDeviceList) {
         this.wifiManager = wifiManager;
         this.wifiDeviceList = wifiDeviceList;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onReceive(Context context, Intent intent) {
+
+
         String action = intent.getAction();
         if (WifiManager.SCAN_RESULTS_AVAILABLE_ACTION.equals(action)) {
             sb = new StringBuilder();
             List<ScanResult> wifiList = wifiManager.getScanResults();
             for (ScanResult scanResult : wifiList) {
-                sb.append("\n").append(batimentId).append(",").append(salleId).append(",").append(floorId).append(",").append(positionId)
-                        .append(",").append(scanResult.SSID).append(",").append(scanResult.BSSID).append(",").append(scanResult.level)
-                        .append(",").append(scanResult.centerFreq0).append(",").append(scanResult.frequency);
+                sb.append("\n").append(batimentId).append(",").append(salleId)
+                        .append(",").append(floorId).append(",").append(positionId)
+                        .append(",").append(scanResult.SSID).append(",").append(scanResult.BSSID)
+                        .append(",").append(scanResult.level).append(",")
+                        .append(scanResult.centerFreq0).append(",").append(scanResult.frequency);
+
                 JsonObject postData= new JsonObject();
+                Wifi wifi = new Wifi();
+
+                wifi.setBssid(scanResult.BSSID);
+                wifi.setCenterFreq0(String.valueOf(scanResult.centerFreq0));
+                wifi.setFrequency(String.valueOf(scanResult.frequency));
+                wifi.setLevel(String.valueOf(scanResult.level));
+                wifi.setSsid(scanResult.SSID);
+                wifi.setDate(uuid);
+
                 postData.addProperty("level",scanResult.level);
+
                 combined.add(scanResult.BSSID, postData);
+                listWifi.add(wifi);
             }
+
         }
     }
+
 
     public String ShowString(){
         if(sb == null){
@@ -54,6 +84,9 @@ public class WifiReceiver extends BroadcastReceiver {
 
     public JsonObject jsList(){
         return combined;
+    }
+    public List<Wifi> newScanList(){
+        return listWifi;
     }
 
 }

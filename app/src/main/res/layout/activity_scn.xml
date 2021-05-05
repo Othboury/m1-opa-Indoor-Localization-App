@@ -7,7 +7,7 @@
     tools:context=".activities.ScanActivity">
 
     <Button
-        android:id="@+id/scanBtn"
+        android:id="@+id/scanNewBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
@@ -16,27 +16,28 @@
         android:text="Scan WiFi"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/roomText" />
 
     <EditText
         android:id="@+id/roomText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="409dp"
+        android:layout_height="51dp"
+        android:layout_marginBottom="250dp"
         android:ems="10"
         android:hint="Salle (Ex: 12)"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/scanBtn"
+        app:layout_constraintBottom_toTopOf="@+id/scanNewBtn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtScan" />
 
     <TextView
         android:id="@+id/txtScan"
-        android:layout_width="390dp"
-        android:layout_height="91dp"
+        android:layout_width="404dp"
+        android:layout_height="99dp"
         android:text="Scanner des nouveaux réseaux Wifi"
         android:textAlignment="center"
         android:textColor="#3F51B5"
@@ -44,8 +45,36 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/roomText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.238"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/linkText"
+        android:layout_width="411dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="200dp"
+        android:ems="10"
+        android:hint="Adresse IP (Ex: 10.21.46.224)"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/scanNewBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomText" />
+
+    <EditText
+        android:id="@+id/txtPort"
+        android:layout_width="409dp"
+        android:layout_height="58dp"
+        android:layout_marginBottom="120dp"
+        android:ems="10"
+        android:hint="Port (Ex: 8091)"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/scanNewBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linkText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

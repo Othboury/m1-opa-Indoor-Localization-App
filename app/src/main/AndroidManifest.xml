@@ -17,9 +17,10 @@
         android:theme="@style/Theme.UserIndoorApp"
         android:usesCleartextTraffic="true">
         <activity android:name=".activities.HomeActivity"></activity>
-        <activity android:name=".activities.ScanActivity" />
+        <activity android:name=".activities.ScanActivity" >
+
+        </activity>
         <activity android:name=".activities.PredictionActivity" />
-        <activity android:name=".activities.LocateActivity" />
         <activity android:name=".activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
