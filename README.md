@@ -15,16 +15,16 @@ using the mobile application below:
 
 https://github.com/Othboury/m1-opa-Wifi-Scan-Data
 
-And sent via REST API into a Python Server (The application below) containing the algorithm allowing the learning to be able to predict the correct classroom afterward when the user tries and locate themselves:
+And sent via REST API into a Python Server containing the learning model, whic usereRandom forest, to be able to predict the correct classroom afterward when the user tries and locate themselves:
 
 https://github.com/papemor94/m1-opa-projet-flask-reseaudeneurone-projet-2021
 
-The data was then put into the training model to achieve higher scores when predicting the position of the user. On the other hand, user management was made possible via a Java server allowing the crud functionalities on users and eventually admins. The Java server (link below) uses Hibernate to create and update a MySQL database. The communication with the server was via REST API.
+The data was then put into the training model to achieve higher scores when predicting the position of the user. On the other hand, user management was made possible via a Java server allowing the crud functionalities on users and eventually admins. The Java server uses Hibernate to create and update a MySQL database. The communication with the server was via REST API.
 
 https://github.com/Othboury/m1-opa-projet-java-android-backend-rest/tree/develop-pape1
 
 The Java server allowed to implement the login functionality on the android application using the Basic Authentication method and associating to each user a unique Token when 
-authenticated, but on the admin side, it allowed the creation of a web application (link below) using Angular that plays the role of a dashboard allowing the management of users.
+authenticated, but on the admin side, it allowed the creation of a web application using Angular that plays the role of a dashboard allowing the management of users.
 
 https://github.com/papemor94/m1-opa-projet-frontend
 
