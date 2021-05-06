@@ -2,7 +2,7 @@
 
 Project by : @othboury - @papemor94 - @azzibert
 
-As part of the Master DID (Data Development and Engineering) at the University of Toulon, we were led to carry out a very ambitious project that allowed us to put into effect our knowledge in mobile development, web development, and machine learning. The project consists of creating an android application allowing the user to locate themselves within the university's campus (Indoor localization) using Wifi Networks.
+As part of the Master DID (Data Development and Engineering) at the University of Toulon, we were led to carry out a very ambitious project that allowed us to put into effect our knowledge in mobile development, web development, machine learning, and Docker. The project consists of creating an android application allowing the user to locate themselves within the university's campus (Indoor localization) using Wifi Networks.
 
 The main functionalities of the application:
 
