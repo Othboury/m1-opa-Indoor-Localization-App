@@ -15,7 +15,7 @@ using the mobile application below:
 
 https://github.com/Othboury/m1-opa-Wifi-Scan-Data
 
-And sent via REST API into a Python Server containing the learning model, whic usereRandom forest, to be able to predict the correct classroom afterward when the user tries and locate themselves:
+And sent via REST API into a Python Server containing the learning model, which uses random forest, to be able to predict the correct classroom afterward when the user tries and locate themselves:
 
 https://github.com/papemor94/m1-opa-projet-flask-reseaudeneurone-projet-2021
 
