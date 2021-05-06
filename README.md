@@ -35,5 +35,5 @@ https://github.com/papemor94/m1-opa-projet-frontend
 
 <h3>Security:</h3>
 
-On the security side, the exchange of data and the communication between the different actors of the application is secured using SSL certificates. Users' confidential informations 
+On the security side, the exchange of data and the communication between the different actors of the application are secured using SSL certificates. Users' confidential informations 
 are hashed before being saved in the dabatase.
