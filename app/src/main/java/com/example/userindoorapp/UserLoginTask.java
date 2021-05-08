@@ -55,7 +55,4 @@ public class UserLoginTask extends AsyncTask<String, Void, String> {
 
         return null;
     }
-
-
-
 }

@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -21,6 +22,8 @@ import android.widget.Toast;
 import com.example.userindoorapp.HTTPReqTaskP;
 import com.example.userindoorapp.R;
 import com.example.userindoorapp.WifiReceiver;
+
+import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
@@ -70,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         btnLocate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String salle = null;
+                JSONObject salle = null;
                 try {
                     salle = httpReq();
                 } catch (ExecutionException e) {
@@ -82,7 +85,7 @@ public class HomeActivity extends AppCompatActivity {
                 if(salle != null){
                     Intent myIntent =
                             new Intent(HomeActivity.this, PredictionActivity.class);
-                    myIntent.putExtra("salle", salle); //Optional parameters
+                    myIntent.putExtra("salle", salle.toString()); //Optional parameters
                     HomeActivity.this.startActivity(myIntent);
                 }else{
                     Intent myIntent =
@@ -118,14 +121,11 @@ public class HomeActivity extends AppCompatActivity {
      * @author Othmane
      *
      * **/
-    public String httpReq() throws ExecutionException, InterruptedException {
+    public JSONObject httpReq() throws ExecutionException, InterruptedException {
         launchScan();
-        System.out.println("WIFI");
-        System.out.println(receiverWifi.jsList());
         HTTPReqTaskP httpReqTaskP = new HTTPReqTaskP();
-        String lineSalle = httpReqTaskP.execute(receiverWifi.jsList()).get();
-        System.out.println(lineSalle);
-        return lineSalle;
+        JSONObject statSalle = httpReqTaskP.execute(receiverWifi.jsList()).get();
+        return statSalle;
     }
 
     /**

@@ -5,6 +5,9 @@ import android.util.Log;
 
 import com.google.gson.JsonObject;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,16 +17,17 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Iterator;
 
-public class HTTPReqTaskP extends AsyncTask<JsonObject, Void, String> {
+public class HTTPReqTaskP extends AsyncTask<JsonObject, Void, JSONObject> {
     @Override
-    protected String doInBackground(JsonObject... jsonObjects) {
+    protected JSONObject doInBackground(JsonObject... jsonObjects) {
         HttpURLConnection urlConnection = null;
         JsonObject js = jsonObjects[0];
-        String roomNumber = null;
+        JSONObject objJ = null;
 
         try {
-            URL url = new URL("http://10.21.46.224:6000/predict");
+            URL url = new URL("http://10.21.46.224:5000/predict");
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestMethod("POST");
@@ -45,9 +49,9 @@ public class HTTPReqTaskP extends AsyncTask<JsonObject, Void, String> {
             BufferedReader rd = new BufferedReader(new InputStreamReader(
                     urlConnection.getInputStream()));
             String lineSalle;
+
             while ((lineSalle = rd.readLine()) != null) {
-                Log.i("data", lineSalle);
-                roomNumber = lineSalle;
+                objJ= new JSONObject(lineSalle);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -56,6 +60,8 @@ public class HTTPReqTaskP extends AsyncTask<JsonObject, Void, String> {
                 urlConnection.disconnect();
             }
         }
-        return roomNumber;
+
+
+        return objJ;
     }
 }

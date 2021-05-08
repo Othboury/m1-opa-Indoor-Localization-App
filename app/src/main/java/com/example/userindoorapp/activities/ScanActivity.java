@@ -28,7 +28,9 @@ import com.example.userindoorapp.WifiReceiver;
 import com.example.userindoorapp.model.Wifi;
 import com.google.gson.JsonObject;
 
+import java.math.BigInteger;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.ExecutionException;
@@ -125,11 +127,23 @@ public class ScanActivity extends AppCompatActivity {
         launchScan();
         JsonObject roomJson = new JsonObject();
         boolean done = false;
+        BigInteger maxLimit = new BigInteger("5000000000000");
+        BigInteger minLimit = new BigInteger("25000000000");
+        BigInteger bigInteger = maxLimit.subtract(minLimit);
+        Random randNum = new Random();
+        int len = maxLimit.bitLength();
+        BigInteger res = new BigInteger(len, randNum);
+        if (res.compareTo(minLimit) < 0)
+            res = res.add(minLimit);
+        if (res.compareTo(bigInteger) >= 0)
+            res = res.mod(bigInteger).add(minLimit);
+
         List<Wifi> listWifi = receiverWifi.newScanList();
         if(!roomNumber.equals("") && !link.equals("") && !port.equals("")) {
             while (!done) {
                 for (Wifi wifi : listWifi) {
                     wifi.setIdsalle(roomNumber);
+                    wifi.setDate(res);
                     roomJson.addProperty("bssid", wifi.getBssid());
                     roomJson.addProperty("centrefrequence0", wifi.getCenterFreq0());
                     roomJson.addProperty("frequency", wifi.getFrequency());

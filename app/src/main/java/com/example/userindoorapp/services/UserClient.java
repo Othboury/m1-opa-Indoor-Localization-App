@@ -7,7 +7,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 
 public interface UserClient {
-
     @GET("auth")
     Call<User> getUser(@Header("Authorization") String authToken);
 }

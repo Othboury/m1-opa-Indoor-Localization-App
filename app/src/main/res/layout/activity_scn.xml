@@ -12,8 +12,9 @@
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
+        android:layout_marginBottom="50dp"
         android:enabled="false"
-        android:text="Scan WiFi"
+        android:text="Learning"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -38,6 +39,7 @@
         android:id="@+id/txtScan"
         android:layout_width="404dp"
         android:layout_height="99dp"
+        android:layout_marginTop="200dp"
         android:text="Scanner des nouveaux réseaux Wifi"
         android:textAlignment="center"
         android:textColor="#3F51B5"
@@ -76,5 +78,16 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linkText" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="322dp"
+        android:layout_height="164dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtScan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/universite_toulon_747" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

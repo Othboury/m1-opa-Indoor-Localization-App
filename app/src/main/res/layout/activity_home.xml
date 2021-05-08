@@ -10,6 +10,7 @@
         android:id="@+id/btnHttp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
         android:minWidth="150dp"
         android:text="Se localiser"
         app:layout_constraintBottom_toTopOf="@+id/btnScanUser"
@@ -22,11 +23,23 @@
         android:id="@+id/btnScanUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="100dp"
         android:minWidth="150dp"
-        android:text="Scanner"
+        android:text="Learning"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnHttp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="322dp"
+        android:layout_height="164dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnHttp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/universite_toulon_747" />
 </androidx.constraintlayout.widget.ConstraintLayout>

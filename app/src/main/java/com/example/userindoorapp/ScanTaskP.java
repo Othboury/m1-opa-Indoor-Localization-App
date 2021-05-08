@@ -23,7 +23,6 @@ public class ScanTaskP extends AsyncTask<Object, Void, Boolean> {
         String httplink = (String) params[1];
         String port = (String) params[2];
 
-        //10.21.46.224:8091
         try {
             String link = "http://"+httplink+":"+port+"/android/wap";
             URL url = new URL(link);

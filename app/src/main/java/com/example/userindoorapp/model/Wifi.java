@@ -1,5 +1,7 @@
 package com.example.userindoorapp.model;
 
+import java.math.BigInteger;
+
 public class Wifi {
     private int idWifi;
     private String bssid;
@@ -7,7 +9,7 @@ public class Wifi {
     private String frequency;
     private String level;
     private String ssid;
-    private String date;
+    private BigInteger date;
     private String idsalle;
 
     public Wifi(){}
@@ -60,11 +62,11 @@ public class Wifi {
         this.ssid = ssid;
     }
 
-    public String getDate() {
+    public BigInteger getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(BigInteger date) {
         this.date = date;
     }
 

@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://10.21.22.150:8100/sign-up"));
+                        Uri.parse("http://10.21.46.224:4200/sign-up"));
                 startActivity(browserIntent);
             }
         });
