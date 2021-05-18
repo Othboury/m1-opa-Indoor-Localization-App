@@ -27,7 +27,7 @@ public class HTTPReqTaskP extends AsyncTask<JsonObject, Void, JSONObject> {
         JSONObject objJ = null;
 
         try {
-            URL url = new URL("http://10.21.46.224:5000/predict");
+            URL url = new URL("http://10.21.46.224:8091/android/predict");
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestMethod("POST");
@@ -60,8 +60,6 @@ public class HTTPReqTaskP extends AsyncTask<JsonObject, Void, JSONObject> {
                 urlConnection.disconnect();
             }
         }
-
-
         return objJ;
     }
 }

@@ -33,15 +33,12 @@ public class PredictionActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        //System.out.println("[PREDICTION]: " +sallePrediction);
         Iterator<String> iter = sallePrediction.keys();
         while(iter.hasNext()){
             key = iter.next();
-            //System.out.println("[KEYS]: "+ key);
             try {
-                sb.append(key).append(" - ").append(new DecimalFormat("##.##").format(sallePrediction.get(key))).append("%").append("\n") ;
-                //System.out.println("[VALUES]: "+ sallePrediction.get(key));
-                //System.out.println(header + sb);
+                sb.append(key).append("      -      ").append(new DecimalFormat("##.##").format(sallePrediction.get(key))).append("%").append("\n") ;
+
                 txtPrediction.setText(header + sb);
             } catch (JSONException e) {
                 e.printStackTrace();
