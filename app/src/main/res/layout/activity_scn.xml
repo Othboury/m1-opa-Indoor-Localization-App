@@ -7,7 +7,7 @@
     tools:context=".activities.ScanActivity">
 
     <Button
-        android:id="@+id/scanNewBtn"
+        android:id="@+id/NextBtn"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
@@ -29,7 +29,7 @@
         android:ems="10"
         android:hint="Salle (Ex: 12)"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/scanNewBtn"
+        app:layout_constraintBottom_toTopOf="@+id/NextBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,7 +59,7 @@
         android:ems="10"
         android:hint="Adresse IP (Ex: 10.21.46.224)"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/scanNewBtn"
+        app:layout_constraintBottom_toTopOf="@+id/NextBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +73,7 @@
         android:ems="10"
         android:hint="Port (Ex: 8091)"
         android:inputType="textPersonName"
-        app:layout_constraintBottom_toTopOf="@+id/scanNewBtn"
+        app:layout_constraintBottom_toTopOf="@+id/NextBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

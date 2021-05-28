@@ -19,15 +19,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Iterator;
 
-public class HTTPReqTaskP extends AsyncTask<JsonObject, Void, JSONObject> {
+public class HTTPReqTaskP extends AsyncTask<Object, Void, JSONObject> {
     @Override
-    protected JSONObject doInBackground(JsonObject... jsonObjects) {
+    protected JSONObject doInBackground(Object... params) {
         HttpURLConnection urlConnection = null;
-        JsonObject js = jsonObjects[0];
+        JsonObject js = (JsonObject) params[0];
         JSONObject objJ = null;
 
         try {
-            URL url = new URL("http://10.21.46.224:8091/android/predict");
+            URL url = new URL("http://"+params[1]+"/android/predict");
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestMethod("POST");

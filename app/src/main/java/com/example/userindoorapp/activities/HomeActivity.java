@@ -41,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
     WifiReceiver receiverWifi;
     Button btnLocate;
     Button btnScan;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         /* Get the user's logged in Token passed from the Login activity*/
         Intent intent = getIntent();
         String Token = intent.getStringExtra("Token");
+        url = intent.getStringExtra("Url");
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -85,7 +87,8 @@ public class HomeActivity extends AppCompatActivity {
                 if(salle != null){
                     Intent myIntent =
                             new Intent(HomeActivity.this, PredictionActivity.class);
-                    myIntent.putExtra("salle", salle.toString()); //Optional parameters
+                    myIntent.putExtra("salle", salle.toString());
+                    myIntent.putExtra("Url", url);
                     HomeActivity.this.startActivity(myIntent);
                 }else{
                     Intent myIntent =
@@ -124,7 +127,7 @@ public class HomeActivity extends AppCompatActivity {
     public JSONObject httpReq() throws ExecutionException, InterruptedException {
         launchScan();
         HTTPReqTaskP httpReqTaskP = new HTTPReqTaskP();
-        JSONObject statSalle = httpReqTaskP.execute(receiverWifi.jsList()).get();
+        JSONObject statSalle = httpReqTaskP.execute(receiverWifi.jsList(), url).get();
         return statSalle;
     }
 

@@ -22,20 +22,27 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserLoginTask extends AsyncTask<String, Void, String> {
-    public static final String BASE_URL = "http://10.21.46.224:8091/android/";
 
-    Gson gson = new GsonBuilder()
-            .setLenient()
-            .create();
+    /*public void createUrl(String url){
+        String BASE_URL = "http://"+url+"/android/";
+    }*/
 
-    Retrofit.Builder builder = new Retrofit.Builder()
-            .baseUrl(BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson));
+    //public static final String BASE_URL = "http://10.21.46.224:8091/android/";
 
-    Retrofit retrofit = builder.build();
 
     @Override
     protected String doInBackground(String... params) {
+        String BASE_URL = "http://"+ params[2]+"/android/";
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
+
+        Retrofit.Builder builder = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson));
+
+        Retrofit retrofit = builder.build();
+
         String username = params[0];
         String password = params[1];
 
