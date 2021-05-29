@@ -27,7 +27,11 @@ public class HTTPReqTaskP extends AsyncTask<Object, Void, JSONObject> {
         JSONObject objJ = null;
 
         try {
-            URL url = new URL("http://"+params[1]+"/android/predict");
+            String para = (String) params[1];
+            String newUrl = para.substring(0, 15) + "6000";
+            URL url = new URL("http://"+newUrl+"/predict");
+
+
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestProperty("Content-Type", "application/json");
             urlConnection.setRequestMethod("POST");

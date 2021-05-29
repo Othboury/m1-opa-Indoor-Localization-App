@@ -25,25 +25,35 @@ public class PredictionActivity extends AppCompatActivity {
         txtPrediction = findViewById(R.id.txtSalle);
         Intent intent = getIntent();
         JSONObject sallePrediction = null;
-        StringBuilder sb = new StringBuilder();;
+        StringBuilder sb = new StringBuilder();
+        ;
         String key = null;
         String header = "Salle - Pourcentage" + "\n";
-        try {
-            sallePrediction = new JSONObject(intent.getStringExtra("salle"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Iterator<String> iter = sallePrediction.keys();
-        while(iter.hasNext()){
-            key = iter.next();
-            try {
-                sb.append(key).append("      -      ").append(new DecimalFormat("##.##").format(sallePrediction.get(key))).append("%").append("\n") ;
 
-                txtPrediction.setText(header + sb);
+        if (intent.getStringExtra("salle").equals("No Data")) {
+            txtPrediction.setText(intent.getStringExtra("salle"));
+
+        }else{
+
+
+            try {
+                sallePrediction = new JSONObject(intent.getStringExtra("salle"));
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            Iterator<String> iter = sallePrediction.keys();
+            while (iter.hasNext()) {
+                key = iter.next();
+                try {
+                    sb.append(key).append("      -      ").append(new DecimalFormat("##.##").format(sallePrediction.get(key))).append("%").append("\n");
 
+                    txtPrediction.setText(header + sb);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
         }
     }
 }

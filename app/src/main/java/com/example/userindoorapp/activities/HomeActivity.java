@@ -94,7 +94,8 @@ public class HomeActivity extends AppCompatActivity {
                     Intent myIntent =
                             new Intent(HomeActivity.this, PredictionActivity.class);
                     myIntent.putExtra("salle", "No Data"); //Optional parameters
-                    HomeActivity.this.startActivity(myIntent);                }
+                    HomeActivity.this.startActivity(myIntent);
+                }
             }
         });
 
@@ -127,6 +128,7 @@ public class HomeActivity extends AppCompatActivity {
     public JSONObject httpReq() throws ExecutionException, InterruptedException {
         launchScan();
         HTTPReqTaskP httpReqTaskP = new HTTPReqTaskP();
+        System.out.println("LIEN: "+url);
         JSONObject statSalle = httpReqTaskP.execute(receiverWifi.jsList(), url).get();
         return statSalle;
     }
