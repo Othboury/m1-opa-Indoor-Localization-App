@@ -119,6 +119,7 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     public boolean scanReq() throws ExecutionException, InterruptedException {
+        System.out.println("TEST TEST TEST");
         String roomNumber = textRoom.getText().toString();
         launchScan();
         JsonObject roomJson = new JsonObject();
@@ -135,25 +136,33 @@ public class ScanActivity extends AppCompatActivity {
             res = res.mod(bigInteger).add(minLimit);
 
         List<Wifi> listWifi = receiverWifi.newScanList();
-        if(!roomNumber.equals("") && !link.equals("") && !port.equals("")) {
-            while (!done) {
-                for (Wifi wifi : listWifi) {
-                    wifi.setIdsalle(roomNumber);
-                    wifi.setDate(res);
-                    roomJson.addProperty("bssid", wifi.getBssid());
-                    roomJson.addProperty("centrefrequence0", wifi.getCenterFreq0());
-                    roomJson.addProperty("frequency", wifi.getFrequency());
-                    roomJson.addProperty("level", wifi.getLevel());
-                    roomJson.addProperty("ssid", wifi.getSsid());
-                    roomJson.addProperty("date", wifi.getDate());
-                    roomJson.addProperty("salle", wifi.getIdsalle());
+        int size = listWifi.size();
 
-                    ScanTaskP ScanTaskP = new ScanTaskP();
-                    if (ScanTaskP.execute(roomJson, link, port).get()) {
-                        ScanTaskP.cancel(true);
+        if(!roomNumber.equals("") && !link.equals("") && !port.equals("")) {
+            if(size > 0){
+            while (!done) {
+                    for (Wifi wifi : listWifi) {
+                        wifi.setIdsalle(roomNumber);
+                        wifi.setDate(res);
+                        roomJson.addProperty("bssid", wifi.getBssid());
+                        roomJson.addProperty("centrefrequence0", wifi.getCenterFreq0());
+                        roomJson.addProperty("frequency", wifi.getFrequency());
+                        roomJson.addProperty("level", wifi.getLevel());
+                        roomJson.addProperty("ssid", wifi.getSsid());
+                        roomJson.addProperty("date", wifi.getDate());
+                        roomJson.addProperty("salle", wifi.getIdsalle());
+
+                        ScanTaskP ScanTaskP = new ScanTaskP();
+                        System.out.println(ScanTaskP.execute(roomJson, link, port).get());
+                        if (ScanTaskP.execute(roomJson, link, port).get()) {
+                            ScanTaskP.cancel(true);
+                        }
                     }
-                }
-                done = true;
+                    done = true;
+            }
+            }else{
+                Toast.makeText(ScanActivity.this, "Pas de réseaux Wifi!",
+                        Toast.LENGTH_SHORT).show();
             }
         }else{
             Toast.makeText(ScanActivity.this, "Remplissez tous les champs!",
