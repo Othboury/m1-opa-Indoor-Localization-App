@@ -153,10 +153,11 @@ public class ScanActivity extends AppCompatActivity {
                         roomJson.addProperty("salle", wifi.getIdsalle());
 
                         ScanTaskP ScanTaskP = new ScanTaskP();
-                        System.out.println(ScanTaskP.execute(roomJson, link, port).get());
-                        if (ScanTaskP.execute(roomJson, link, port).get()) {
+                        ScanTaskP.execute(roomJson, link, port).get();
+                        ScanTaskP.cancel(true);
+                        /*if (ScanTaskP.execute(roomJson, link, port).get()) {
                             ScanTaskP.cancel(true);
-                        }
+                        }*/
                     }
                     done = true;
             }
