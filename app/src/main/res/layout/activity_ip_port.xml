@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.IpPortActivity">
+
+    <EditText
+        android:id="@+id/linkText"
+        android:layout_width="411dp"
+        android:layout_height="57dp"
+        android:layout_marginBottom="224dp"
+        android:ems="10"
+        android:hint="Adresse IP (Ex: 10.21.46.224)"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/NextBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomText" />
+
+    <EditText
+        android:id="@+id/txtPort"
+        android:layout_width="409dp"
+        android:layout_height="58dp"
+        android:layout_marginBottom="120dp"
+        android:ems="10"
+        android:hint="Port (Ex: 8091)"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/NextBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linkText"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/NextBtn"
+        android:layout_width="193dp"
+        android:layout_height="52dp"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="148dp"
+        android:enabled="false"
+        android:text="Continuer"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/roomText" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="322dp"
+        android:layout_height="164dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtScan"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/universite_toulon_747" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

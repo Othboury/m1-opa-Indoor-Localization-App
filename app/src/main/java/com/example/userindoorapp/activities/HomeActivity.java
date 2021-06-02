@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -21,6 +22,8 @@ import android.widget.Toast;
 import com.example.userindoorapp.HTTPReqTaskP;
 import com.example.userindoorapp.R;
 import com.example.userindoorapp.WifiReceiver;
+
+import org.json.JSONObject;
 
 import java.util.concurrent.ExecutionException;
 
@@ -38,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
     WifiReceiver receiverWifi;
     Button btnLocate;
     Button btnScan;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +53,7 @@ public class HomeActivity extends AppCompatActivity {
         /* Get the user's logged in Token passed from the Login activity*/
         Intent intent = getIntent();
         String Token = intent.getStringExtra("Token");
+        url = intent.getStringExtra("Url");
 
         wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
 
@@ -70,7 +75,7 @@ public class HomeActivity extends AppCompatActivity {
         btnLocate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String salle = null;
+                JSONObject salle = null;
                 try {
                     salle = httpReq();
                 } catch (ExecutionException e) {
@@ -82,13 +87,15 @@ public class HomeActivity extends AppCompatActivity {
                 if(salle != null){
                     Intent myIntent =
                             new Intent(HomeActivity.this, PredictionActivity.class);
-                    myIntent.putExtra("salle", salle); //Optional parameters
+                    myIntent.putExtra("salle", salle.toString());
+                    myIntent.putExtra("Url", url);
                     HomeActivity.this.startActivity(myIntent);
                 }else{
                     Intent myIntent =
                             new Intent(HomeActivity.this, PredictionActivity.class);
                     myIntent.putExtra("salle", "No Data"); //Optional parameters
-                    HomeActivity.this.startActivity(myIntent);                }
+                    HomeActivity.this.startActivity(myIntent);
+                }
             }
         });
 
@@ -118,14 +125,12 @@ public class HomeActivity extends AppCompatActivity {
      * @author Othmane
      *
      * **/
-    public String httpReq() throws ExecutionException, InterruptedException {
+    public JSONObject httpReq() throws ExecutionException, InterruptedException {
         launchScan();
-        System.out.println("WIFI");
-        System.out.println(receiverWifi.jsList());
         HTTPReqTaskP httpReqTaskP = new HTTPReqTaskP();
-        String lineSalle = httpReqTaskP.execute(receiverWifi.jsList()).get();
-        System.out.println(lineSalle);
-        return lineSalle;
+        System.out.println("LIEN: "+url);
+        JSONObject statSalle = httpReqTaskP.execute(receiverWifi.jsList(), url).get();
+        return statSalle;
     }
 
     /**

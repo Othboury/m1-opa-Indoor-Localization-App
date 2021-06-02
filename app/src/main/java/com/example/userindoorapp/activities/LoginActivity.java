@@ -22,12 +22,14 @@ import java.util.concurrent.ExecutionException;
  * the application through REST Api Basic Authentication
  *
  */
+
 public class LoginActivity extends AppCompatActivity {
 
     EditText edtUsername;
     EditText edtPassword;
     TextView txtRegister;
     Button btnLogin;
+    String url;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = (EditText) findViewById(R.id.edtPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
         txtRegister = findViewById(R.id.txtRegister);
+
+        Intent intent = getIntent();
+        url = intent.getStringExtra("Url");
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse("http://10.21.22.150:8100/sign-up"));
+                        Uri.parse("http://10.21.46.224:4200/sign-up"));
                 startActivity(browserIntent);
             }
         });
@@ -80,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
     private void redirect(String Token){
         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
         intent.putExtra("Token", Token);
+        intent.putExtra("Url", url);
         startActivity(intent);
     }
 
@@ -88,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
         String username = edtUsername.getText().toString();
         String password = edtPassword.getText().toString();
         if(validateLogin(username, password)) {
-            String Token = new UserLoginTask().execute(username, password).get();
+            String Token = new UserLoginTask().execute(username, password,url).get();
             if (Token != null) {
                 return Token;
             } else {

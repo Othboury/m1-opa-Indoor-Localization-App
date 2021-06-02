@@ -7,13 +7,11 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -28,9 +26,9 @@ import com.example.userindoorapp.WifiReceiver;
 import com.example.userindoorapp.model.Wifi;
 import com.google.gson.JsonObject;
 
+import java.math.BigInteger;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 public class ScanActivity extends AppCompatActivity {
@@ -51,7 +49,7 @@ public class ScanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scn);
         textRoom = findViewById(R.id.roomText);
-        buttonScan = findViewById(R.id.scanNewBtn);
+        buttonScan = findViewById(R.id.NextBtn);
         textLink = findViewById(R.id.linkText);
         textPort = findViewById(R.id.txtPort);
         textLink.setEnabled(false);
@@ -121,29 +119,51 @@ public class ScanActivity extends AppCompatActivity {
     }
 
     public boolean scanReq() throws ExecutionException, InterruptedException {
+        System.out.println("TEST TEST TEST");
         String roomNumber = textRoom.getText().toString();
         launchScan();
         JsonObject roomJson = new JsonObject();
         boolean done = false;
-        List<Wifi> listWifi = receiverWifi.newScanList();
-        if(!roomNumber.equals("") && !link.equals("") && !port.equals("")) {
-            while (!done) {
-                for (Wifi wifi : listWifi) {
-                    wifi.setIdsalle(roomNumber);
-                    roomJson.addProperty("bssid", wifi.getBssid());
-                    roomJson.addProperty("centrefrequence0", wifi.getCenterFreq0());
-                    roomJson.addProperty("frequency", wifi.getFrequency());
-                    roomJson.addProperty("level", wifi.getLevel());
-                    roomJson.addProperty("ssid", wifi.getSsid());
-                    roomJson.addProperty("date", wifi.getDate());
-                    roomJson.addProperty("salle", wifi.getIdsalle());
+        BigInteger maxLimit = new BigInteger("5000000000000");
+        BigInteger minLimit = new BigInteger("25000000000");
+        BigInteger bigInteger = maxLimit.subtract(minLimit);
+        Random randNum = new Random();
+        int len = maxLimit.bitLength();
+        BigInteger res = new BigInteger(len, randNum);
+        if (res.compareTo(minLimit) < 0)
+            res = res.add(minLimit);
+        if (res.compareTo(bigInteger) >= 0)
+            res = res.mod(bigInteger).add(minLimit);
 
-                    ScanTaskP ScanTaskP = new ScanTaskP();
-                    if (ScanTaskP.execute(roomJson, link, port).get()) {
+        List<Wifi> listWifi = receiverWifi.newScanList();
+        int size = listWifi.size();
+
+        if(!roomNumber.equals("") && !link.equals("") && !port.equals("")) {
+            if(size > 0){
+            while (!done) {
+                    for (Wifi wifi : listWifi) {
+                        wifi.setIdsalle(roomNumber);
+                        wifi.setDate(res);
+                        roomJson.addProperty("bssid", wifi.getBssid());
+                        roomJson.addProperty("centrefrequence0", wifi.getCenterFreq0());
+                        roomJson.addProperty("frequency", wifi.getFrequency());
+                        roomJson.addProperty("level", wifi.getLevel());
+                        roomJson.addProperty("ssid", wifi.getSsid());
+                        roomJson.addProperty("date", wifi.getDate());
+                        roomJson.addProperty("salle", wifi.getIdsalle());
+
+                        ScanTaskP ScanTaskP = new ScanTaskP();
+                        ScanTaskP.execute(roomJson, link, port).get();
                         ScanTaskP.cancel(true);
+                        /*if (ScanTaskP.execute(roomJson, link, port).get()) {
+                            ScanTaskP.cancel(true);
+                        }*/
                     }
-                }
-                done = true;
+                    done = true;
+            }
+            }else{
+                Toast.makeText(ScanActivity.this, "Pas de réseaux Wifi!",
+                        Toast.LENGTH_SHORT).show();
             }
         }else{
             Toast.makeText(ScanActivity.this, "Remplissez tous les champs!",
